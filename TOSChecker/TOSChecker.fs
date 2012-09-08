@@ -24,7 +24,7 @@ type BHO() =
 
     let OnDocumentComplete _ url =
         document <- webBrowser.Document :?> HTMLDocument
-        System.Windows.Forms.MessageBox.Show("URL loaded: " + url.ToString()) |> ignore
+        sprintf "URL loaded: %s" (url.ToString()) |> System.Diagnostics.Debug.Print
 
     interface IObjectWithSite with
         member this.SetSite site =
@@ -54,7 +54,7 @@ type BHO() =
             match registryKey.OpenSubKey(guid) with
             | null -> registryKey.CreateSubKey(guid)
             | key -> key
-        ourKey.SetValue("Alright", 1)
+        ourKey.SetValue("NoExplorer", 1)
         registryKey.Close()
         ourKey.Close()
 
