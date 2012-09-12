@@ -1,6 +1,8 @@
 ﻿module TOSChecker
 open System
 open System.Runtime.InteropServices
+open System.ServiceModel
+open TOSCheckerService.Contracts
 
 open SHDocVw
 open mshtml
@@ -17,14 +19,26 @@ type IObjectWithSite =
 [<Literal>]
 let bhoKeyName = """Software\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects"""
 
-[<ComVisible(true); ClassInterface(ClassInterfaceType.None); Guid("F6E787A0-BE33-406B-964E-9497E80589A7")>]
+[<ComVisible(true); ProgId("Terms of Service - Didn't Read Helper"); ClassInterface(ClassInterfaceType.None); Guid("F6E787A0-BE33-406B-964E-9497E80589A7")>]
 type BHO() =
     let mutable webBrowser : WebBrowser = null
     let mutable document : HTMLDocument = null
+    let factory = new ChannelFactory<ITOSCheckerService>(new BasicHttpBinding(), "http://localhost:8123")
 
     let OnDocumentComplete _ url =
+        let uri = new Uri(url.ToString())
+        let channel = factory.CreateChannel()
         document <- webBrowser.Document :?> HTMLDocument
-        sprintf "URL loaded: %s" (url.ToString()) |> System.Diagnostics.Debug.Print
+        sprintf "Attempting to load %s" uri.Host |> System.Diagnostics.Debug.Print 
+        try 
+            channel.LoadDomain uri.Host
+        with
+            | :? EndpointNotFoundException as e -> "Endpoint is not listening" |> System.Diagnostics.Debug.Print
+            | e -> sprintf "Couldn't load: %s" e.Message |> System.Diagnostics.Debug.Print
+            
+    interface IDisposable with
+        member x.Dispose() =
+            factory.Close()
 
     interface IObjectWithSite with
         member this.SetSite site =
@@ -49,12 +63,12 @@ type BHO() =
             match Registry.LocalMachine.OpenSubKey(bhoKeyName, true) with
             | null -> Registry.LocalMachine.CreateSubKey(bhoKeyName)
             | key -> key
-        let guid = bhoType.GUID.ToString("B")
+        let guid = bhoType.GUID.ToString("B").ToUpper()
         let ourKey = 
             match registryKey.OpenSubKey(guid) with
             | null -> registryKey.CreateSubKey(guid)
             | key -> key
-        ourKey.SetValue("NoExplorer", 1)
+        ourKey.SetValue("NoExplorer", 1, RegistryValueKind.DWord)
         registryKey.Close()
         ourKey.Close()
 
@@ -62,4 +76,4 @@ type BHO() =
     static member UnregisterBHO (bhoType : Type) =
         let registryKey = Registry.LocalMachine.OpenSubKey(bhoKeyName, true)
         if not (registryKey = null) then
-            registryKey.DeleteSubKey(bhoType.GUID.ToString("B"), false)
+            registryKey.DeleteSubKey(bhoType.GUID.ToString("B").ToUpper(), false)

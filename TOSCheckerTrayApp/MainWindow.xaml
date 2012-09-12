@@ -1,0 +1,11 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ViewModel="clr-namespace:TOSCheckerTrayApp.ViewModel;assembly=tos-dr"
+    Title="" ShowInTaskbar="False" ResizeMode="NoResize" Visibility="Hidden" Topmost="True" WindowStyle="None"
+    WindowStartupLocation="CenterScreen" Width="400" SizeToContent="Height">
+    <Window.DataContext>
+        <ViewModel:MainWindowViewModel/>
+    </Window.DataContext>
+    <Frame x:Name="MainView" Source="TOSMainView.xaml"/>
+</Window>

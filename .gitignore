@@ -2,3 +2,5 @@
 *.dll
 */bin
 */obj
+packages/*
+
