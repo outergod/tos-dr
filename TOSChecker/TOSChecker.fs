@@ -1,4 +1,4 @@
-﻿module TOSChecker
+﻿namespace TOSChecker
 open System
 open System.Runtime.InteropServices
 open System.ServiceModel
@@ -16,10 +16,7 @@ type IObjectWithSite =
     [<PreserveSig>]
     abstract member GetSite : Guid ref -> nativeint ref -> int
 
-[<Literal>]
-let bhoKeyName = """Software\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects"""
-
-[<ComVisible(true); ProgId("Terms of Service - Didn't Read Helper"); ClassInterface(ClassInterfaceType.None); Guid("F6E787A0-BE33-406B-964E-9497E80589A7")>]
+[<ComVisible(true); ProgId("Terms of Service; Didn't Read Helper"); ClassInterface(ClassInterfaceType.None); Guid("F6E787A0-BE33-406B-964E-9497E80589AA")>]
 type BHO() =
     let mutable webBrowser : WebBrowser = null
     let mutable document : HTMLDocument = null
@@ -57,11 +54,13 @@ type BHO() =
             Marshal.Release(punk) |> ignore
             hr
 
+    static member bhoKeyName = """Software\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects"""
+
     [<ComRegisterFunction>]
     static member RegisterBHO (bhoType : Type) =
         let registryKey =
-            match Registry.LocalMachine.OpenSubKey(bhoKeyName, true) with
-            | null -> Registry.LocalMachine.CreateSubKey(bhoKeyName)
+            match Registry.LocalMachine.OpenSubKey(BHO.bhoKeyName, true) with
+            | null -> Registry.LocalMachine.CreateSubKey(BHO.bhoKeyName)
             | key -> key
         let guid = bhoType.GUID.ToString("B").ToUpper()
         let ourKey = 
@@ -74,6 +73,6 @@ type BHO() =
 
     [<ComUnregisterFunction>]
     static member UnregisterBHO (bhoType : Type) =
-        let registryKey = Registry.LocalMachine.OpenSubKey(bhoKeyName, true)
+        let registryKey = Registry.LocalMachine.OpenSubKey(BHO.bhoKeyName, true)
         if not (registryKey = null) then
             registryKey.DeleteSubKey(bhoType.GUID.ToString("B").ToUpper(), false)

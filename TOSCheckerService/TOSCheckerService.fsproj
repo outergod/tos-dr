@@ -43,6 +43,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ITOSCheckerService.fs" />
   </ItemGroup>
   <PropertyGroup>
