@@ -1,28 +1,26 @@
-﻿namespace TOSChecker
-
-open System.Reflection
-open System.Runtime.CompilerServices
-open System.Runtime.InteropServices
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("ToS;DR Service Interface")>]
-[<assembly: AssemblyDescription("Terms of Service; Didn't Read - WCF service interface")>]
-[<assembly: AssemblyConfiguration("")>]
-[<assembly: AssemblyCompany("Terms of Service; Didn't Read - Developers")>]
-[<assembly: AssemblyProduct("ToS;DR")>]
-[<assembly: AssemblyCopyright("Copyright © Alexander Kahl 2012")>]
-[<assembly: AssemblyTrademark("")>]
-[<assembly: AssemblyCulture("")>]
+[assembly: AssemblyTitle("ToS;DR Internet Explorer Add-On")]
+[assembly: AssemblyDescription("Terms of Service; Didn't Read - Add-On for Internet Explorer")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Terms of Service; Didn't Read - Developers")]
+[assembly: AssemblyProduct("ToS;DR")]
+[assembly: AssemblyCopyright("Copyright © Alexander Kahl 2012")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
-[<assembly: ComVisible(false)>]
+[assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[<assembly: Guid("dec31cc5-37ab-4da1-800e-c9c21d31b6d3")>]
+[assembly: Guid("7c141538-7776-48c7-be5a-27953b22a6ad")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,6 +32,5 @@ open System.Runtime.InteropServices
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[<assembly: AssemblyVersion("0.0.1.*")>]
-[<assembly: AssemblyKeyFileAttribute(@"..\tos-dr.snk")>]
-()
+[assembly: AssemblyVersion("0.0.1.*")]
+//[assembly: AssemblyFileVersion("1.0.0.0")]
