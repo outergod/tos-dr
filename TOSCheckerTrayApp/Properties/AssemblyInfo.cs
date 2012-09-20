@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ToS;DR tray application")]
+[assembly: AssemblyTitle("ToS;DR")]
 [assembly: AssemblyDescription("Terms of Service; Didn't Read Browser Helper Object that hooks into Internet Explorer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Terms of Service - Didn't Read Developers")]
-[assembly: AssemblyProduct("ToS;DR")]
+[assembly: AssemblyProduct("ToS;DR for Internet Explorer")]
 [assembly: AssemblyCopyright("Copyright © Alexander Kahl 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

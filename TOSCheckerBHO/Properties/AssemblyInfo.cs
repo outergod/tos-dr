@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Terms of Service; Didn't Read - Add-On for Internet Explorer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Terms of Service; Didn't Read - Developers")]
-[assembly: AssemblyProduct("ToS;DR")]
+[assembly: AssemblyProduct("ToS;DR for Internet Explorer")]
 [assembly: AssemblyCopyright("Copyright © Alexander Kahl 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

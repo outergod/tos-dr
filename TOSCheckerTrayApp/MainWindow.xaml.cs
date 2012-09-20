@@ -27,12 +27,6 @@ namespace TOSCheckerTrayApp
             InitializeComponent();
         }
 
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            this.DataContext = new MainWindowViewModel();
-        }
-
         private void HideWindow(object sender, EventArgs e)
         {
             ((MainWindowViewModel)this.DataContext).HideWindow(this);

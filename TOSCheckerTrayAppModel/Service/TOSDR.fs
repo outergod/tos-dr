@@ -17,9 +17,10 @@ let loadService name callback =
     client.OpenReadCompleted.Add 
         (fun args -> 
             try deserialize<ServiceItem> args.Result |> callback with
-            | e -> 
+            | :? Reflection.TargetInvocationException as e -> 
                 let response = (e.InnerException :?> WebException).Response :?> HttpWebResponse
                 match response.StatusCode with
                 | HttpStatusCode.NotFound -> sprintf "Service [%s] could not be found" name |> Debug.WriteLine
-                | _ -> sprintf "Unexpected error trying to load service [%s]: %s" name e.InnerException.Message |> Debug.WriteLine)
+                | _ -> sprintf "Unexpected HTTP error trying to load service [%s]: %s" name e.InnerException.Message |> Debug.WriteLine
+            | e -> sprintf "Unexpected exception trying to load and parse data for service [%s]: %s" name e.Message |> Debug.WriteLine)
     client.OpenReadAsync(new Uri(uri))
