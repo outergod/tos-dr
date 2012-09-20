@@ -31,6 +31,6 @@ let createTrayIcon (app : Application) (icon : IO.Stream) =
     let trayIcon = 
         new NotifyIcon
             (Visible = true, Text = "Terms of Service; Didn't Read",
-             Icon = new Icon(icon, 32, 32), ContextMenu = createTrayIconContextMenu app)
+             Icon = new Icon(icon, 16, 16), ContextMenu = createTrayIconContextMenu app)
     trayIcon.MouseClick.Add(fun e -> toggleWindowVisibility app.MainWindow e)
     app.Exit.Add(fun _ -> trayIcon.Dispose())
