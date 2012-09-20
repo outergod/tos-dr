@@ -42,7 +42,7 @@
     <Compile Include="TOSCheckerService.fs" />
     <Compile Include="Model\ServiceItem.fs" />
     <Compile Include="Model\DataPointItem.fs" />
-    <Compile Include="TOSDR.fs" />
+    <Compile Include="Service\TOSDR.fs" />
     <Compile Include="ViewModel\ViewModelBase.fs" />
     <Compile Include="ViewModel\MainWindowViewModel.fs" />
     <Compile Include="TOSTrayIcon.fs" />
