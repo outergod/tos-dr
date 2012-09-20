@@ -5,5 +5,5 @@ open System.ServiceModel
 
 [<ServiceContract>]
 type ITOSCheckerService =
-    [<OperationContract>]
+    [<OperationContract(IsOneWay = true)>]
     abstract LoadDomain : value:string -> unit
