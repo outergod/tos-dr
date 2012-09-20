@@ -3,6 +3,7 @@
 open System
 open System.Net
 open System.Runtime.Serialization.Json
+open System.Diagnostics
 
 open TOSCheckerTrayApp.Model
 
@@ -13,5 +14,12 @@ let deserialize<'T> (stream : IO.Stream) =
 let loadService name callback =
     let client = new WebClient()
     let uri = sprintf "http://tos-dr.info/services/%s.json" name
-    client.OpenReadCompleted.Add(fun args -> deserialize<ServiceItem> args.Result |> callback)
+    client.OpenReadCompleted.Add 
+        (fun args -> 
+            try deserialize<ServiceItem> args.Result |> callback with
+            | e -> 
+                let response = (e.InnerException :?> WebException).Response :?> HttpWebResponse
+                match response.StatusCode with
+                | HttpStatusCode.NotFound -> sprintf "Service [%s] could not be found" name |> Debug.WriteLine
+                | _ -> sprintf "Unexpected error trying to load service [%s]: %s" name e.InnerException.Message |> Debug.WriteLine)
     client.OpenReadAsync(new Uri(uri))
