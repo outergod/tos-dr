@@ -11,10 +11,11 @@
         <Border x:Name="TOSBorder" BorderBrush="#FFDDE0E2" BorderThickness="0,0,0,1" VerticalAlignment="Top" Height="55">
             <Image Source="{StaticResource Banner}" Margin="10" Stretch="None"/>
         </Border>
-        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,5" Visibility="{Binding HasNoItems, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,5" 
+                   Visibility="{Binding HasNoItems, Converter={StaticResource BooleanToVisibilityConverter}}">
             Load websites in Internet Explorer to have their Terms of Service classifications displayed here.
         </TextBlock>
-        <TextBlock Text="{Binding Domain}"/>
-        <ListBox Width="400" ItemsSource="{Binding Items}" ItemTemplate="{StaticResource TOSItemsTemplate}"/>
+        <ListBox Width="400" ItemsSource="{Binding Items}" ItemTemplate="{StaticResource TOSItemsTemplate}" 
+                 Visibility="{Binding HasItems, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </StackPanel>
 </Window>

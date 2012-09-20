@@ -34,9 +34,3 @@ let createTrayIcon (app : Application) (icon : IO.Stream) =
              Icon = new Icon(icon, 32, 32), ContextMenu = createTrayIconContextMenu app)
     trayIcon.MouseClick.Add(fun e -> toggleWindowVisibility app.MainWindow e)
     app.Exit.Add(fun _ -> trayIcon.Dispose())
-
-let startServer (app : Application) receiver =
-    let server = new ServiceHost(new TOSCheckerService(receiver), new Uri("http://localhost:8123"))
-    server.Open()
-    app.Exit.Add(fun _ -> server.Close())
-    server

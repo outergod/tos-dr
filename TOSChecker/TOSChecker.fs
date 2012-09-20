@@ -1,4 +1,5 @@
 ﻿namespace TOSChecker
+
 open System
 open System.Runtime.InteropServices
 open System.ServiceModel
@@ -16,7 +17,7 @@ type IObjectWithSite =
     [<PreserveSig>]
     abstract member GetSite : Guid ref -> nativeint ref -> int
 
-[<ComVisible(true); ProgId("Terms of Service; Didn't Read Helper"); ClassInterface(ClassInterfaceType.None); Guid("F6E787A0-BE33-406B-964E-9497E80589AA")>]
+[<ComVisible(true); ClassInterface(ClassInterfaceType.None); Guid("F6E787A0-BE33-406B-964E-9497E80589AA")>]
 type BHO() =
     let mutable webBrowser : WebBrowser = null
     let mutable document : HTMLDocument = null
@@ -27,7 +28,7 @@ type BHO() =
         let channel = factory.CreateChannel()
         document <- webBrowser.Document :?> HTMLDocument
         sprintf "Attempting to load %s" uri.Host |> System.Diagnostics.Debug.Print 
-        try 
+        try
             channel.LoadDomain uri.Host
         with
             | :? EndpointNotFoundException as e -> "Endpoint is not listening" |> System.Diagnostics.Debug.Print

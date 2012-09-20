@@ -12,10 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.ServiceModel;
 
 using TOSCheckerTrayApp.ViewModel;
-using Microsoft.FSharp.Core;
 
 namespace TOSCheckerTrayApp
 {
@@ -24,14 +22,9 @@ namespace TOSCheckerTrayApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        ServiceHost server;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            var receiver = new Converter<string, Unit>(delegate(string data) { ((MainWindowViewModel)this.DataContext).Domain = data; return null; });
-            server = TOSTrayIcon.startServer(Application.Current, receiver);
         }
 
         protected override void OnInitialized(EventArgs e)
@@ -42,8 +35,7 @@ namespace TOSCheckerTrayApp
 
         private void HideWindow(object sender, EventArgs e)
         {
-            ((MainWindowViewModel)this.DataContext).ClosedTimestamp = DateTime.Now.Ticks;
-            this.Hide();
+            ((MainWindowViewModel)this.DataContext).HideWindow(this);
         }
     }
 }
