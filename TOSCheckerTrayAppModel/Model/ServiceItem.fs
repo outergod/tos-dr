@@ -3,6 +3,7 @@
 open System
 open System.Runtime.Serialization
 open System.Runtime.Serialization.Json
+open System.Text.RegularExpressions
 
 [<DataContract>]
 type ServiceItemTosBackPrivacy =
@@ -32,4 +33,8 @@ type ServiceItem =
       [<DataMember(Name = "tosback2")>] mutable TosBack : ServiceItemTosBack
       [<DataMember(Name = "tosdr")>] mutable TosDr : ServiceItemTosDr
       [<DataMember(Name = "related")>] mutable Related : string[]
-      [<DataMember(Name = "keywords")>] mutable Keywords : string }
+      [<DataMember(Name = "keywords")>] mutable Keywords : string[]
+      // late init
+      mutable UrlRegex : Regex
+      mutable Points : Points
+      mutable Links : Links }

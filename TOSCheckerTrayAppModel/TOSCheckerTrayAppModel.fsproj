@@ -40,6 +40,7 @@
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <ItemGroup>
     <Compile Include="TOSCheckerService.fs" />
+    <Compile Include="Model\ServicesItem.fs" />
     <Compile Include="Model\ServiceItem.fs" />
     <Compile Include="Model\DataPointItem.fs" />
     <Compile Include="Service\TOSDR.fs" />
@@ -51,6 +52,10 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />

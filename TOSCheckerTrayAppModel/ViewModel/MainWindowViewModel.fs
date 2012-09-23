@@ -3,6 +3,7 @@ open System
 open System.ComponentModel
 open System.Windows
 open TOSCheckerService
+open TOSCheckerTrayApp.Model
 open TOSCheckerTrayApp.Service
 
 type MainWindowViewModel() as self =
@@ -12,8 +13,8 @@ type MainWindowViewModel() as self =
     let mutable server = null
     let mutable closedTimeStamp = 0L
     let mutable domain = null
-    let mutable service = None
     let mutable visible = false
+    let mutable services = Seq.empty
         
     let receiver (data : string) =
         self.Domain <- data
@@ -21,6 +22,7 @@ type MainWindowViewModel() as self =
     do 
         if not inDesignMode then 
             server <- TOSCheckerService.startServer Application.Current receiver
+            services <- TOSDR.loadServices()
 
     member x.ClosedTimestamp
         with get() = closedTimeStamp
@@ -29,12 +31,17 @@ type MainWindowViewModel() as self =
             x.OnPropertyChanged("ClosedTimestamp")
 
     member x.Service
-        with get() = service
-        and set(value) = 
-            service <- value
-            x.OnPropertyChanged("Service")
+        with get() =
+            match x.Domain with
+            | null -> None
+            | domain ->
+                let matchService (service : ServiceItem) =
+                    match service.UrlRegex.IsMatch(domain) with
+                    | true -> Some(service)
+                    | false -> None
+                Seq.tryPick matchService services
 
-    member x.HasService with get() = service <> None
+    member x.HasService with get() = x.Service <> None
     member x.HasNoService with get() = not x.HasService
 
     member x.Domain
@@ -42,7 +49,9 @@ type MainWindowViewModel() as self =
         and set(value) =
             domain <- value
             x.OnPropertyChanged("Domain")
-            TOSDR.loadService value (fun service -> x.Service <- Some(service))
+            x.OnPropertyChanged("Service")
+            x.OnPropertyChanged("HasService")
+            x.OnPropertyChanged("HasNoService")
 
     member x.Visible
         with get() =
