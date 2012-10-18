@@ -40,9 +40,9 @@
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <ItemGroup>
     <Compile Include="TOSCheckerService.fs" />
+    <Compile Include="Model\DataPointItem.fs" />
     <Compile Include="Model\ServicesItem.fs" />
     <Compile Include="Model\ServiceItem.fs" />
-    <Compile Include="Model\DataPointItem.fs" />
     <Compile Include="Service\TOSDR.fs" />
     <Compile Include="ViewModel\ViewModelBase.fs" />
     <Compile Include="ViewModel\MainWindowViewModel.fs" />

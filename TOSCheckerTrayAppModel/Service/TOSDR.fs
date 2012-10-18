@@ -13,37 +13,40 @@ let deserialize<'T> (data : string) =
 //    serializer.ReadObject(stream) :?> 'T
     JsonConvert.DeserializeObject<'T>(data)
 
-let loadService name =
+let load<'T> (uriFormat : string -> string) name =
     let client = new WebClient()
-    let uri = sprintf "http://tos-dr.info/services/%s.json" name
-    try client.DownloadString(uri) |> deserialize<ServiceItem> |> Some with
+    let uri = uriFormat name
+    try client.DownloadString(uri) |> deserialize<'T> |> Some with
     | :? Reflection.TargetInvocationException as e -> 
         let response = (e.InnerException :?> WebException).Response :?> HttpWebResponse
         match response.StatusCode with
-        | HttpStatusCode.NotFound -> sprintf "Service [%s] could not be found" name |> Debug.WriteLine; None
-        | _ -> sprintf "Unexpected HTTP error trying to load service [%s]: %s" name e.InnerException.Message |> Debug.WriteLine; None
-    | e -> sprintf "Unexpected exception trying to load and parse data for service [%s]: %s" name e.Message |> Debug.WriteLine; None
+        | HttpStatusCode.NotFound -> sprintf "Item [%s] could not be found at [%s]" name uri |> Debug.WriteLine; None
+        | _ -> sprintf "Unexpected HTTP error trying to load item [%s] from [%s]: %s" name uri e.InnerException.Message |> Debug.WriteLine; None
+    | e -> sprintf "Unexpected exception trying to load and parse data for item [%s] from [%s]: %s" name uri e.Message |> Debug.WriteLine; None
 
-let mergeService (KeyValue (k : string, v : ServicesItem)) = async {
+let loadDataPoint = load<DataPointItem> (fun id -> sprintf "http://tos-dr.info/points/%s.json" id)
+let loadService = load<ServiceItem> (fun name -> sprintf "http://tos-dr.info/services/%s.json" name)
+
+let mergeService (KeyValue (k : string, v : ServicesItem)) =
     match loadService k with
     | Some(service) ->
         if service.Url <> null then
-            let domain = match service.Url.IsAbsoluteUri with
+            let domain = 
+                match service.Url.IsAbsoluteUri with
                 | true -> service.Url.Host
                 | false -> service.Url.OriginalString
             service.UrlRegex <- new Regex("https?://(?:[^:]\.)?" + domain + "(?:/.*)?")
-        service.Points <- v.Points
+        service.Points <- Seq.map (fun point -> async { return loadDataPoint point }) v.Points |> Async.Parallel |> Async.RunSynchronously |> Seq.choose id |> Seq.toArray
         service.Links <- v.Links
-        return Some(service)
-    | None -> return None
-}
+        Some(service)
+    | None -> None
 
 let loadServices callback =
     let client = new WebClient()
     let uri = new Uri("http://tos-dr.info/index/services.json")
     try
         let services = client.DownloadString(uri) |> deserialize<Services>
-        Seq.map mergeService services |> Async.Parallel |> Async.RunSynchronously |> Seq.choose id
+        Seq.map (fun service -> async { return mergeService service }) services |> Async.Parallel |> Async.RunSynchronously |> Seq.choose id
     with
     | :? Reflection.TargetInvocationException as e -> 
         let response = (e.InnerException :?> WebException).Response :?> HttpWebResponse

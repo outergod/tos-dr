@@ -19,5 +19,12 @@
                    Visibility="{Binding HasNoService, Converter={StaticResource BooleanToVisibilityConverter}}">
             Load websites in Internet Explorer to have their Terms of Service classifications displayed here.
         </TextBlock>
+        <ListBox ItemsSource="{Binding Service}" Visibility="{Binding HasService, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </StackPanel>
 </Window>

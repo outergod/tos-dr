@@ -36,5 +36,5 @@ type ServiceItem =
       [<DataMember(Name = "keywords")>] mutable Keywords : string[]
       // late init
       mutable UrlRegex : Regex
-      mutable Points : Points
+      mutable Points : DataPointItem[]
       mutable Links : Links }
