@@ -8,10 +8,7 @@ open Newtonsoft.Json
 
 open TOSCheckerTrayApp.Model
 
-let deserialize<'T> (data : string) =
-//    let serializer = new DataContractJsonSerializer(typeof<'T>)
-//    serializer.ReadObject(stream) :?> 'T
-    JsonConvert.DeserializeObject<'T>(data)
+let deserialize<'T> (data : string) = JsonConvert.DeserializeObject<'T>(data)
 
 let load<'T> (uriFormat : string -> string) name =
     let client = new WebClient()
@@ -24,7 +21,6 @@ let load<'T> (uriFormat : string -> string) name =
         | _ -> sprintf "Unexpected HTTP error trying to load item [%s] from [%s]: %s" name uri e.InnerException.Message |> Debug.WriteLine; None
     | e -> sprintf "Unexpected exception trying to load and parse data for item [%s] from [%s]: %s" name uri e.Message |> Debug.WriteLine; None
 
-let loadDataPoint = load<DataPointItem> (fun id -> sprintf "http://tos-dr.info/points/%s.json" id)
 let loadService = load<ServiceItem> (fun name -> sprintf "http://tos-dr.info/services/%s.json" name)
 
 let mergeService (KeyValue (k : string, v : ServicesItem)) =
@@ -36,8 +32,6 @@ let mergeService (KeyValue (k : string, v : ServicesItem)) =
                 | true -> service.Url.Host
                 | false -> service.Url.OriginalString
             service.UrlRegex <- new Regex("https?://(?:[^:]\.)?" + domain + "(?:/.*)?")
-        service.Points <- Seq.map (fun point -> async { return loadDataPoint point }) v.Points |> Async.Parallel |> Async.RunSynchronously |> Seq.choose id |> Seq.toArray
-        service.Links <- v.Links
         Some(service)
     | None -> None
 

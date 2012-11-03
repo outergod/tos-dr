@@ -31,5 +31,21 @@ namespace TOSCheckerTrayApp
         {
             ((MainWindowViewModel)this.DataContext).HideWindow(this);
         }
+
+        private void Recenter(object sender, SizeChangedEventArgs e)
+        {
+            ((MainWindowViewModel)this.DataContext).Recenter(this);
+        }
+
+        private void Recenter(object sender, EventArgs e)
+        {
+            ((MainWindowViewModel)this.DataContext).Recenter(this);
+        }
+
+        private void Window_DataContextChanged_1(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((TOSCheckerTrayApp.App)App.Current).MainWindow_DataContextChanged(sender, e);
+        }
     }
 }
+

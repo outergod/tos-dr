@@ -5,6 +5,7 @@ open System.Drawing
 open System.Windows
 open System.Windows.Controls
 open System.ServiceModel
+open TOSCheckerTrayApp.Model
 open TOSCheckerTrayApp.ViewModel
 open TOSCheckerService
 
@@ -34,3 +35,7 @@ let createTrayIcon (app : Application) (icon : IO.Stream) =
              Icon = new Icon(icon, 16, 16), ContextMenu = createTrayIconContextMenu app)
     trayIcon.MouseClick.Add(fun e -> toggleWindowVisibility app.MainWindow e)
     app.Exit.Add(fun _ -> trayIcon.Dispose())
+    trayIcon
+
+let adaptRatingIcon (trayIcon : NotifyIcon) (rating : TosRating option) =
+    ()

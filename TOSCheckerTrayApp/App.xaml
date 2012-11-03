@@ -4,8 +4,5 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <BitmapImage x:Key="Banner" UriSource="Resources/tosdr-logo-32.png"/>
-        <DataTemplate x:Key="TOSItemsTemplate">
-            <TextBox Text="Test"/>
-        </DataTemplate>
     </Application.Resources>
 </Application>

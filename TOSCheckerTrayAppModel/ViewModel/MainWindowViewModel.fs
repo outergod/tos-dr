@@ -15,7 +15,8 @@ type MainWindowViewModel() as self =
     let mutable domain = null
     let mutable visible = false
     let mutable services = Seq.empty
-        
+    let mutable trayIcon = null
+
     let receiver (data : string) =
         self.Domain <- data
 
@@ -36,13 +37,34 @@ type MainWindowViewModel() as self =
             | null -> None
             | domain ->
                 let matchService (service : ServiceItem) =
-                    match service.UrlRegex.IsMatch(domain) with
+                    match service.UrlRegex <> null && service.UrlRegex.IsMatch(domain) with
                     | true -> Some(service)
                     | false -> None
                 Seq.tryPick matchService services
 
+    member x.ServiceUri
+        with get() =
+            match x.Service with
+            | None -> ""
+            | Some(service) -> sprintf "http://didnotread.github.com/browser-extensions/popup/#%s" (service.Url.ToString())
+                        
     member x.HasService with get() = x.Service <> None
     member x.HasNoService with get() = not x.HasService
+
+    member x.Rating 
+        with get() =
+            match x.Service with
+            | None -> None
+            | Some(service) ->
+                match service.TosDr.Rated with
+                | "False" -> Some(TosRating.Unrated)
+                | "A" -> Some(TosRating.A)
+                | "B" -> Some(TosRating.B)
+                | "C" -> Some(TosRating.C)
+                | "D" -> Some(TosRating.D)
+                | "E" -> Some(TosRating.E)
+                | "F" -> Some(TosRating.F)
+                | _ -> Some(TosRating.Unrated)
 
     member x.Domain
         with get() = domain
@@ -50,8 +72,10 @@ type MainWindowViewModel() as self =
             domain <- value
             x.OnPropertyChanged("Domain")
             x.OnPropertyChanged("Service")
+            x.OnPropertyChanged("ServiceUri")
             x.OnPropertyChanged("HasService")
             x.OnPropertyChanged("HasNoService")
+            x.OnPropertyChanged("Rating")
 
     member x.Visible
         with get() =
@@ -59,7 +83,7 @@ type MainWindowViewModel() as self =
             | true -> Visibility.Visible
             | false ->
                 match visible with 
-                | true -> Visibility.Visible 
+                | true -> Visibility.Visible
                 | false -> Visibility.Hidden
         and set(value) = 
             visible <- 
@@ -68,5 +92,10 @@ type MainWindowViewModel() as self =
                 | _ -> false
 
     member x.HideWindow (window : Window) =
-            x.ClosedTimestamp <- DateTime.Now.Ticks
-            window.Hide()
+        x.ClosedTimestamp <- DateTime.Now.Ticks
+        window.Hide()
+
+    member x.Recenter (window : Window) =
+        let workArea = SystemParameters.WorkArea
+        window.Left <- (workArea.Width - window.ActualWidth) / 2.0
+        window.Top <- (workArea.Height - window.ActualHeight) / 2.0
