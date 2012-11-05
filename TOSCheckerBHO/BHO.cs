@@ -20,7 +20,7 @@ namespace BHO
     public class TOSDRAddOn : IObjectWithSite
     {
         IWebBrowser2 browser;
-        ChannelFactory<ITOSCheckerService> factory = new ChannelFactory<ITOSCheckerService>(new BasicHttpBinding(), "http://localhost:8123");
+        ChannelFactory<ITOSCheckerService> factory = new ChannelFactory<ITOSCheckerService>(new NetNamedPipeBinding(), Constants.ServiceUrl);
 
         void OnDocumentComplete(object pDisp, ref object URL)
         {
@@ -31,7 +31,7 @@ namespace BHO
             {
                 channel.LoadDomain(uri.Host);
             }
-            catch (EndpointNotFoundException e)
+            catch (EndpointNotFoundException)
             {
                 System.Diagnostics.Debug.Print("Endpoint is not listening");
             }

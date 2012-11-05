@@ -12,7 +12,7 @@ type TOSCheckerService (loader : string -> unit) =
             loader value
 
     static member startServer (app : Application) receiver =
-        let server = new ServiceHost(new TOSCheckerService(receiver), new Uri("http://localhost:8123"))
+        let server = new ServiceHost(new TOSCheckerService(receiver), new Uri(Constants.ServiceUrl))
         server.Open()
         app.Exit.Add(fun _ -> server.Close())
         server
