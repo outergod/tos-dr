@@ -1,6 +1,7 @@
 ﻿namespace TOSCheckerTrayApp.ViewModel
 open System
 open System.ComponentModel
+open System.Web
 open System.Windows
 open TOSCheckerService
 open TOSCheckerTrayApp.Model
@@ -46,7 +47,12 @@ type MainWindowViewModel() as self =
         with get() =
             match x.Service with
             | None -> ""
-            | Some(service) -> sprintf "http://didnotread.github.com/browser-extensions/popup/#%s" (service.Url.ToString())
+            | Some(service) ->
+                let uri = 
+                    match service.Url.IsAbsoluteUri with
+                    | true -> service.Url
+                    | false -> (new UriBuilder(service.Url.OriginalString, Scheme = "http")).Uri
+                sprintf "http://didnotread.github.com/browser-extensions/popup/?url=%s" (uri.ToString() |> HttpUtility.UrlEncode)
                         
     member x.HasService with get() = x.Service <> None
     member x.HasNoService with get() = not x.HasService
